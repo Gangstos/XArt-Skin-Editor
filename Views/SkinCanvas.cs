@@ -134,7 +134,9 @@ public sealed class SkinCanvas : Control
         if (!props.IsLeftButtonPressed && !erase) return;
 
         e.Pointer.Capture(this);
-        var tool = erase ? Tool.Eraser : Tool;
+        // Right button erases, except with the lighten/darken brush where it darkens.
+        var tool = erase && Tool != Tool.Shade ? Tool.Eraser : Tool;
+        _darken = erase && Tool == Tool.Shade;
         if (tool == Tool.Picker)
         {
             var c = _doc.GetPixel(px.x, px.y);
@@ -159,6 +161,7 @@ public sealed class SkinCanvas : Control
 
     private Tool _active;
     private byte[]? _strokeSnap;
+    private bool _darken;
     private readonly System.Collections.Generic.HashSet<(int, int)> _shaded = new();
 
     protected override void OnPointerMoved(PointerEventArgs e)
@@ -198,7 +201,7 @@ public sealed class SkinCanvas : Control
                 {
                     if (!_shaded.Add((x, y))) continue;
                     var o = (y * SkinDocument.Width + x) * 4;
-                    ed.Set(x, y, Shading.Apply(new Rgba(snap[o], snap[o + 1], snap[o + 2], snap[o + 3])));
+                    ed.Set(x, y, Shading.Apply(new Rgba(snap[o], snap[o + 1], snap[o + 2], snap[o + 3]), _darken));
                 }
             });
             return;

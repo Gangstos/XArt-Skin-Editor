@@ -182,13 +182,16 @@ public sealed class ModelView : Control
         var pos = e.GetPosition(this);
         var props = e.GetCurrentPoint(this).Properties;
 
-        if (props.IsRightButtonPressed || props.IsMiddleButtonPressed)
+        // The lighten/darken brush uses the right button to darken, so there the view is rotated with the middle button.
+        var shadeRight = Tool == Tool.Shade && props.IsRightButtonPressed;
+        if (props.IsMiddleButtonPressed || (props.IsRightButtonPressed && !shadeRight))
         {
             _orbit = true; _last = pos;
             e.Pointer.Capture(this);
             return;
         }
-        if (!props.IsLeftButtonPressed || _doc is null || Pick(pos) is not { } hit) return;
+        if (!(props.IsLeftButtonPressed || shadeRight) || _doc is null || Pick(pos) is not { } hit) return;
+        _darken = shadeRight;
 
         if (Tool == Tool.Picker)
         {
@@ -254,6 +257,7 @@ public sealed class ModelView : Control
     }
 
     private readonly HashSet<(int, int)> _shaded = new();
+    private bool _darken;   // the current lighten/darken stroke was started with the right button
 
     private void Stroke(List<(int x, int y)> texels)
     {
@@ -266,7 +270,7 @@ public sealed class ModelView : Control
                 {
                     if (!_shaded.Add((x, y))) continue;
                     var o = (y * SkinDocument.Width + x) * 4;
-                    ed.Set(x, y, Shading.Apply(new Rgba(snap[o], snap[o + 1], snap[o + 2], snap[o + 3])));
+                    ed.Set(x, y, Shading.Apply(new Rgba(snap[o], snap[o + 1], snap[o + 2], snap[o + 3]), _darken));
                 }
             });
             return;

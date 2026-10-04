@@ -88,8 +88,6 @@ public partial class MainWindow : Window
         ToolFill.IsCheckedChanged += (_, _) => SetTool(ToolFill, Tool.Fill, "tool.fill");
         ToolPicker.IsCheckedChanged += (_, _) => SetTool(ToolPicker, Tool.Picker, "tool.picker");
         ToolShade.IsCheckedChanged += (_, _) => SetTool(ToolShade, Tool.Shade, "tool.shade");
-        ShadeLight.IsCheckedChanged += (_, _) => Shading.Darken = ShadeDark.IsChecked == true;
-        ShadeDark.IsCheckedChanged += (_, _) => Shading.Darken = ShadeDark.IsChecked == true;
         ShadeAmount.ValueChanged += (_, _) => Shading.Percent = (int)Math.Clamp(ShadeAmount.Value ?? 15, 1, 50);
 
         GridCheck.IsCheckedChanged += (_, _) => SetGrid(GridCheck.IsChecked == true);
