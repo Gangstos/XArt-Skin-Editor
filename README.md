@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <b>English</b> · <a href="README.ru.md">Русский</a> · <a href="LICENSE">MIT License</a>
+  <b>English</b> · <a href="README.ru.md">Русский</a> · <a href="https://github.com/Gangstos/XArt-Skin-Editor/releases/latest">Download</a> · <a href="LICENSE">MIT License</a>
 </p>
 
 ---
@@ -80,7 +80,7 @@ NuGet packages are downloaded automatically on the first build:
 
 ## Build
 
-Run from the project folder.
+Prebuilt archives for Windows, Linux and macOS are on the [Releases page](https://github.com/Gangstos/XArt-Skin-Editor/releases/latest). To build from source, run these from the project folder.
 
 **Run from source (any OS)**
 
@@ -278,8 +278,8 @@ The 3D preview is a small CPU ray caster, not a graphics engine; the same ray co
 | Platform | Status |
 |---|---|
 | Windows 10/11 x64 | builds and runs; main features tested |
-| Linux x64 | builds; **not run** |
-| macOS (Intel, Apple Silicon) | **not built or run**; commands follow the Avalonia and .NET documentation |
+| Linux x64 | built in CI; the app starts on a virtual display and its MCP server reports all 21 tools; not tried on a real desktop |
+| macOS (Intel, Apple Silicon) | built in CI on a macOS runner and ad-hoc signed; **not run on a real Mac** |
 
 - Old **64×32** skins load into the top half of the canvas; the left arm and leg are not generated.
 - One 1 px brush; no brush size or selection tools.

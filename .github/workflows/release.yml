@@ -68,6 +68,8 @@ jobs:
           NAME="XArtSkinEditor-$VERSION-${{ matrix.rid }}"
           mkdir -p "dist/$NAME"
           cp -R publish/. "dist/$NAME/"
+          # Debug symbols of the native libraries (~100 MB) are not needed to run the app.
+          find "dist/$NAME" -name '*.pdb' -delete
           cp LICENSE "dist/$NAME/"
           if [ "${{ matrix.archive }}" = "zip" ]; then
             (cd dist && 7z a -tzip "$NAME.zip" "$NAME" > /dev/null)
