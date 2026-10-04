@@ -64,7 +64,8 @@ public static class Loc
         {
             new[] { "menu.file", "File", "Файл", "Archivo", "Arquivo", "Datei", "Fichier", "File", "ファイル", "Файл", "Файл", "Plik" },
             new[] { "menu.edit", "Edit", "Правка", "Edición", "Editar", "Bearbeiten", "Édition", "Modifica", "編集", "Правка", "Өңдеу", "Edycja" },
-            new[] { "menu.view", "View", "Вид", "Ver", "Exibir", "Ansicht", "Affichage", "Visualizza", "表示", "Вигляд", "Көрініс", "Widok" },
+            new[] { "mi.theme", "Theme", "Тема", "Tema", "Tema", "Design", "Thème", "Tema", "テーマ", "Тема", "Тақырып", "Motyw" },
+            new[] { "menu.view","View", "Вид", "Ver", "Exibir", "Ansicht", "Affichage", "Visualizza", "表示", "Вигляд", "Көрініс", "Widok" },
             new[] { "mi.open", "Open PNG...", "Открыть PNG...", "Abrir PNG...", "Abrir PNG...", "PNG öffnen...", "Ouvrir un PNG...", "Apri PNG...", "PNG を開く...", "Відкрити PNG...", "PNG ашу...", "Otwórz PNG..." },
             new[] { "mi.save", "Save PNG...", "Сохранить PNG...", "Guardar PNG...", "Salvar PNG...", "PNG speichern...", "Enregistrer en PNG...", "Salva PNG...", "PNG を保存...", "Зберегти PNG...", "PNG сақтау...", "Zapisz PNG..." },
             new[] { "mi.exit", "Exit", "Выход", "Salir", "Sair", "Beenden", "Quitter", "Esci", "終了", "Вихід", "Шығу", "Zakończ" },
@@ -182,7 +183,7 @@ public static class Loc
     // Simplified Chinese, keyed like the rows above.
     private static readonly Dictionary<string, string> Zh = new()
     {
-        ["menu.file"] = "文件", ["menu.edit"] = "编辑", ["menu.view"] = "视图",
+        ["menu.file"] = "文件", ["menu.edit"] = "编辑", ["menu.view"] = "视图", ["mi.theme"] = "主题",
         ["mi.open"] = "打开 PNG...", ["mi.save"] = "保存 PNG...", ["mi.exit"] = "退出",
         ["mi.undo"] = "撤销", ["mi.redo"] = "重做", ["mi.clear"] = "清空画布",
         ["mi.map"] = "皮肤贴图", ["mi.grid"] = "像素网格", ["mi.reset"] = "重置 3D 视图",

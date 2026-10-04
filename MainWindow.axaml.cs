@@ -284,16 +284,42 @@ public partial class MainWindow : Window
     private void BuildThemeControls()
     {
         foreach (var t in AppTheme.All) ThemeCombo.Items.Add(new ComboBoxItem { Content = t.Name });
-        ThemeCombo.SelectedIndex = Array.IndexOf(AppTheme.All, AppTheme.Current);
+        var items = new List<MenuItem>();
+        foreach (var t in AppTheme.All)
+        {
+            var theme = t;
+            var mi = new MenuItem { Header = t.Name, ToggleType = MenuItemToggleType.CheckBox };
+            mi.Click += (_, _) => ChooseTheme(theme);
+            items.Add(mi);
+        }
+        MiTheme.ItemsSource = items;
+
         ThemeCombo.SelectionChanged += (_, _) =>
         {
-            if (ThemeCombo.SelectedIndex < 0) return;
-            var t = AppTheme.All[ThemeCombo.SelectedIndex];
-            if (t == AppTheme.Current) return;
+            if (ThemeCombo.SelectedIndex >= 0) ChooseTheme(AppTheme.All[ThemeCombo.SelectedIndex]);
+        };
+        SyncThemeControls();
+        AppTheme.Changed += UpdateMcpUi;   // its status text is coloured in code
+    }
+
+    private void ChooseTheme(AppTheme.Def t)
+    {
+        if (t != AppTheme.Current)
+        {
             AppTheme.Apply(t);
             AppSettings.SaveTheme(t.Id);
-        };
-        AppTheme.Changed += UpdateMcpUi;   // its status text is coloured in code
+        }
+        SyncThemeControls();   // also re-ticks the menu item the user just toggled off
+    }
+
+    /// <summary>Keeps the top-bar combo and the View ▸ Theme menu showing the current theme.</summary>
+    private void SyncThemeControls()
+    {
+        var cur = Array.IndexOf(AppTheme.All, AppTheme.Current);
+        if (ThemeCombo.SelectedIndex != cur) ThemeCombo.SelectedIndex = cur;
+        var i = 0;
+        foreach (var o in MiTheme.Items)
+            if (o is MenuItem mi) mi.IsChecked = i++ == cur;
     }
 
     private static int IndexOfLanguage(string code)

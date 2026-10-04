@@ -272,6 +272,8 @@
                         <MenuItem x:Name="MiMap" v:Tr.Key="mi.map" ToggleType="CheckBox" />
                         <MenuItem x:Name="MiGrid" v:Tr.Key="mi.grid" ToggleType="CheckBox" IsChecked="True" />
                         <Separator />
+                        <MenuItem x:Name="MiTheme" v:Tr.Key="mi.theme" />
+                        <Separator />
                         <MenuItem x:Name="MiReset" v:Tr.Key="mi.reset" />
                     </MenuItem>
                 </Menu>
