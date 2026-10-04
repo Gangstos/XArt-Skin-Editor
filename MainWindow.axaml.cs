@@ -72,7 +72,6 @@ public partial class MainWindow : Window
         _session = new SessionStore(_ws);
         InitializeComponent();
         SetColor(ColorPick.Color);
-
         ColorPick.ColorChanged += (_, e) => SetColor(e.NewColor);
         Canvas.ColorPicked += c => ColorPick.Color = c;
         Model.ColorPicked += c => ColorPick.Color = c;
@@ -340,6 +339,7 @@ public partial class MainWindow : Window
         LayerCombo.SelectedIndex = -1;
         LayerCombo.SelectedIndex = layer;
         ToolName.Text = Loc.T(_toolKey);
+        ToolTip.SetTip(ToolShade, Loc.T("tip.shade") + "\n" + Loc.T("shade.hint"));
         RefreshLayerTexts();
         if (_statusIsHint) StatusText.Text = Loc.T("status.hint");
         RebuildTabs();   // close-button tooltips
@@ -621,7 +621,9 @@ public partial class MainWindow : Window
         Model.Tool = tool;
         _toolKey = key;
         ToolName.Text = Loc.T(key);
+        // The brush has its own options and does not use the paint color; hiding the color keeps the bar from overflowing.
         ShadePanel.IsVisible = tool == Tool.Shade;
+        Swatch.IsVisible = SwatchHex.IsVisible = tool != Tool.Shade;
     }
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
