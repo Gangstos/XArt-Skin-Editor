@@ -24,7 +24,7 @@ public sealed class ModelView : Control
     private readonly Camera _cam = new();
     private WriteableBitmap? _bmp;
     private byte[] _buf = Array.Empty<byte>();
-    private byte[]? _rgba;
+    private byte[]? _rgba, _strokeRgba;
     private ModelBox[]? _viewBoxes, _paintBoxes;
     private bool _frameQueued, _orbit, _painting, _lowRes;
     private Point _last;
@@ -152,7 +152,7 @@ public sealed class ModelView : Control
         _rgba ??= _doc.SnapshotRgba();
         var basis = new SkinRenderer.Basis(_cam, (float)(Bounds.Width / Bounds.Height));
         var ray = basis.At((float)(p.X / Bounds.Width), (float)(p.Y / Bounds.Height));
-        return SkinRenderer.Trace(_rgba, boxes, ray, _layer == PaintLayer.Auto, out var hit) ? hit : null;
+        return SkinRenderer.Trace(_painting && _strokeRgba is not null ? _strokeRgba : _rgba, boxes, ray, _layer == PaintLayer.Auto, out var hit) ? hit : null;
     }
 
     private string Describe(Hit h)
@@ -199,6 +199,9 @@ public sealed class ModelView : Control
         }
 
         _painting = true; _last = pos;
+        // Pick against the pixels as they were when the stroke began: otherwise an eraser that just cleared an
+        // overlay texel would see it as transparent on the next sample and go on to erase the base beneath it.
+        _strokeRgba = (byte[])_rgba!.Clone();
         e.Pointer.Capture(this);
         _doc.BeginStroke();
         Stroke(new List<(int, int)> { (hit.Tx, hit.Ty) });
@@ -249,7 +252,7 @@ public sealed class ModelView : Control
     {
         base.OnPointerReleased(e);
         if (_orbit) { _orbit = false; _lowRes = false; RequestFrame(); }
-        if (_painting) { _painting = false; _doc?.EndStroke(); }
+        if (_painting) { _painting = false; _strokeRgba = null; _doc?.EndStroke(); }
         e.Pointer.Capture(null);
     }
 
