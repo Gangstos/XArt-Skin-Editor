@@ -13,6 +13,10 @@
   <b>English</b> · <a href="README.ru.md">Русский</a> · <a href="https://github.com/Gangstos/XArt-Skin-Editor/releases/latest">Download</a> · <a href="LICENSE">MIT License</a>
 </p>
 
+<p align="center">
+  <img src="docs/screenshot.png" alt="XArt Skin Editor: 3D preview, layers panel and tools" width="900">
+</p>
+
 ---
 
 ## Contents
