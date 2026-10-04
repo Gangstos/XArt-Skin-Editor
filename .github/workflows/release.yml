@@ -59,7 +59,7 @@ jobs:
           echo "MCP tools reported by the running Linux build: $COUNT"
           echo "--- app.log"; cat app.log || true
           pkill -f XArtSkinEditor || true
-          test "$COUNT" -eq 21
+          test "$COUNT" -eq 27
 
       - name: Package
         shell: bash

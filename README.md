@@ -55,7 +55,7 @@
 - **Color palette**: save as many as 48 colors under the color picker. Click a swatch to switch to it (or press `1`–`9` for the first nine), **+** adds the current color, the color picker (also the middle mouse button) adds every color it picks, right-click removes one. The palette is remembered between launches.
 - 3 color themes: **Classic Purple** (default), **Dark Pinky** (black with pink accents) and **Sun White** (light, warm amber). Switch from the top bar; the choice is remembered.
 
-**MCP server** (off by default) — 21 tools for AI agents. See [MCP server](#mcp-server).
+**MCP server** (off by default) — 27 tools for AI agents. See [MCP server](#mcp-server).
 
 ---
 
@@ -232,7 +232,7 @@ Any other client that supports MCP over HTTP (Streamable HTTP) works the same wa
 - File access is limited to `load_png` and `export_png`, on the path the agent passes.
 - Turn the server off when you do not need it.
 
-### Tools (21)
+### Tools (27)
 
 All drawing tools act on the **active tab**.
 
@@ -247,6 +247,12 @@ All drawing tools act on the **active tab**.
 | `fill_rect` | Fills a rectangle (clipped to the canvas). |
 | `draw_line` | Draws a 1 px line. |
 | `flood_fill` | Paint bucket: fills a contiguous area of one color. |
+| `shade_pixels` | The Lighten/Darken brush for a list of pixels (`"x,y"`): `amount` -100..100 %, positive lightens, negative darkens. Keeps hue and transparency. One undo step. |
+| `shade_rect` | The same for every pixel of a rectangle. |
+| `get_palette` | The color palette saved in the editor, numbered from 1. |
+| `add_palette_color` | Saves a color to the palette. |
+| `remove_palette_color` | Removes a color from the palette. |
+| `pick_color` | The eyedropper: reads a pixel and saves its color to the palette. |
 | `clear_canvas` | Makes the whole canvas transparent (undoable). |
 | `undo`, `redo` | One agent command is one undo step. |
 | `load_png` | Replaces the canvas with a PNG from disk (absolute path) and detects Steve/Alex. |
@@ -325,7 +331,7 @@ The 3D preview is a small CPU ray caster, not a graphics engine; the same ray co
 | Platform | Status |
 |---|---|
 | Windows 10/11 x64 | builds and runs; main features tested |
-| Linux x64 | built in CI; the app starts on a virtual display and its MCP server reports all 21 tools; not tried on a real desktop |
+| Linux x64 | built in CI; the app starts on a virtual display and its MCP server reports all 27 tools; not tried on a real desktop |
 | macOS (Intel, Apple Silicon) | built in CI on a macOS runner and ad-hoc signed; **not run on a real Mac** |
 
 - Old **64×32** skins load into the top half of the canvas; the left arm and leg are not generated.

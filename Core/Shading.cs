@@ -9,11 +9,13 @@ public static class Shading
     /// <summary>Strength in percent of the lightness range (1-50).</summary>
     public static int Percent { get; set; } = 15;
 
-    public static Rgba Apply(Rgba c, bool darken)
+    public static Rgba Apply(Rgba c, bool darken) => Apply(c, darken, Percent);
+
+    public static Rgba Apply(Rgba c, bool darken, int percent)
     {
         if (c.A == 0) return c;                       // nothing to shade on an empty pixel
         var (h, s, l) = ToHsl(c.R, c.G, c.B);
-        l = Math.Clamp(l + (darken ? -1 : 1) * Percent / 100.0, 0, 1);
+        l = Math.Clamp(l + (darken ? -1 : 1) * percent / 100.0, 0, 1);
         var (r, g, b) = FromHsl(h, s, l);
         return new Rgba(r, g, b, c.A);
     }

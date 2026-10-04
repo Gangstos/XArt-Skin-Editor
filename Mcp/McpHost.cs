@@ -22,7 +22,7 @@ public sealed class McpHost : IAsyncDisposable
     /// <summary>Raised after the running state changes (may come from a background thread).</summary>
     public event Action? StateChanged;
 
-    public async Task<bool> StartAsync(Workspace workspace, int port)
+    public async Task<bool> StartAsync(Workspace workspace, Palette palette, int port)
     {
         if (_app is not null) return true;
         Error = null;
@@ -32,6 +32,7 @@ public sealed class McpHost : IAsyncDisposable
             var builder = WebApplication.CreateSlimBuilder();
             builder.WebHost.UseUrls($"http://127.0.0.1:{port}");
             builder.Services.AddSingleton(workspace);
+            builder.Services.AddSingleton(palette);
             builder.Services.AddMcpServer()
                 .WithHttpTransport()
                 .WithTools<SkinTools>();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ModelContextProtocol;
 using System.ComponentModel;
 using System.IO;
@@ -10,7 +11,7 @@ using XArtSkinEditor.Core;
 namespace XArtSkinEditor.Mcp;
 
 [McpServerToolType]
-public sealed class SkinTools(Workspace ws)
+public sealed class SkinTools(Workspace ws, Palette palette)
 {
     private const string ColorHelp = "Color as #RRGGBB, #RRGGBBAA or 'transparent' (erases).";
 
@@ -173,6 +174,100 @@ public sealed class SkinTools(Workspace ws)
         }).ToArray();
         doc.Edit(e => { foreach (var (x, y, c) in parsed) e.Set(x, y, c); });
         return $"set {parsed.Length} pixels";
+    }
+
+    private const string AmountHelp = "Brightness change in percent of the lightness range, -100..100: positive lightens, negative darkens. Hue and transparency are kept; fully transparent pixels are left alone.";
+
+    private static (int x, int y) ParseXY(string entry)
+    {
+        var parts = entry.Split(',', StringSplitOptions.TrimEntries);
+        if (parts.Length != 2 || !int.TryParse(parts[0], out var x) || !int.TryParse(parts[1], out var y))
+            throw new McpException($"Bad entry '{entry}', expected 'x,y'.");
+        if (!SkinDocument.InBounds(x, y))
+            throw new McpException($"Entry '{entry}' is outside the canvas (0-63).");
+        return (x, y);
+    }
+
+    private static void CheckAmount(int amount)
+    {
+        if (amount is < -100 or > 100) throw new McpException("amount must be between -100 and 100.");
+    }
+
+    private string Shade(IEnumerable<(int x, int y)> pixels, int amount)
+    {
+        var list = pixels.Distinct().ToList();   // a pixel listed twice is shaded once, like one brush stroke
+        doc.Edit(e =>
+        {
+            foreach (var (x, y) in list)
+                e.Set(x, y, Shading.Apply(doc.GetPixel(x, y), amount < 0, Math.Abs(amount)));
+        });
+        return $"shaded {list.Count} pixels by {amount}%";
+    }
+
+    [McpServerTool(Name = "shade_pixels")]
+    [Description("Lightens or darkens the listed pixels (the editor's Lighten/Darken brush), keeping each pixel's hue and transparency. One undo step. Good for shadows and highlights on existing colors. " + AmountHelp + " Each entry is 'x,y', e.g. [\"3,4\",\"3,5\"].")]
+    public string ShadePixels([Description("Entries formatted 'x,y'.")] string[] pixels, [Description(AmountHelp)] int amount)
+    {
+        CheckAmount(amount);
+        return Shade(pixels.Select(ParseXY).ToList(), amount);
+    }
+
+    [McpServerTool(Name = "shade_rect")]
+    [Description("Lightens or darkens every pixel of a rectangle (clipped to the canvas), keeping hue and transparency. One undo step. " + AmountHelp)]
+    public string ShadeRect(int x, int y, int width, int height, [Description(AmountHelp)] int amount)
+    {
+        CheckAmount(amount);
+        var x0 = Math.Max(0, x); var y0 = Math.Max(0, y);
+        var x1 = Math.Min(SkinDocument.Width, x + width); var y1 = Math.Min(SkinDocument.Height, y + height);
+        var pts = new List<(int, int)>();
+        for (var py = y0; py < y1; py++)
+            for (var px = x0; px < x1; px++) pts.Add((px, py));
+        return Shade(pts, amount);
+    }
+
+    [McpServerTool(Name = "get_palette", ReadOnly = true)]
+    [Description("Returns the user's saved color palette, numbered from 1 (the first nine can be selected with the keys 1-9 in the editor).")]
+    public string GetPalette()
+    {
+        var colors = palette.Snapshot();
+        return colors.Count == 0 ? "the palette is empty" : string.Join("\n", colors.Select((c, i) => $"{i + 1}. {c}"));
+    }
+
+    [McpServerTool(Name = "add_palette_color")]
+    [Description("Saves a color to the palette shown in the editor. Does nothing if it is already there. The palette holds up to 48 colors.")]
+    public string AddPaletteColor([Description("Color as #RRGGBB or #RRGGBBAA.")] string color)
+    {
+        var c = ParseColor(color);
+        if (c.A == 0) throw new McpException("A fully transparent color cannot be added to the palette.");
+        return palette.Add(c) switch
+        {
+            PaletteAdd.Added => $"added {c}",
+            PaletteAdd.AlreadyThere => $"{c} is already in the palette",
+            _ => throw new McpException($"The palette is full ({Palette.Max} colors). Remove one with remove_palette_color first."),
+        };
+    }
+
+    [McpServerTool(Name = "remove_palette_color", Destructive = true)]
+    [Description("Removes a color from the palette shown in the editor.")]
+    public string RemovePaletteColor([Description("Color as #RRGGBB or #RRGGBBAA, as listed by get_palette.")] string color)
+    {
+        var c = ParseColor(color);
+        return palette.Remove(c) ? $"removed {c}" : $"{c} is not in the palette";
+    }
+
+    [McpServerTool(Name = "pick_color")]
+    [Description("The eyedropper: reads the color of a pixel and saves it to the palette (unless it is fully transparent or already there). Returns the color.")]
+    public string PickColor(int x, int y)
+    {
+        CheckPixel(x, y);
+        var c = doc.GetPixel(x, y);
+        if (c.A == 0) return $"{c} (transparent, not added to the palette)";
+        return palette.Add(c) switch
+        {
+            PaletteAdd.Added => $"{c} (added to the palette)",
+            PaletteAdd.AlreadyThere => $"{c} (already in the palette)",
+            _ => $"{c} (palette is full, not added)",
+        };
     }
 
     [McpServerTool(Name = "fill_rect")]

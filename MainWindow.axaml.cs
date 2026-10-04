@@ -132,7 +132,7 @@ public partial class MainWindow : Window
             if (i >= 0 && i + 1 < args.Length && int.TryParse(args[i + 1], out var port))
             {
                 PortBox.Value = port;
-                await _mcp.StartAsync(_ws, port);
+                await _mcp.StartAsync(_ws, _pal, port);
                 UpdateMcpUi();
             }
         };
@@ -393,7 +393,7 @@ public partial class MainWindow : Window
             try
             {
                 if (_mcp.IsRunning) await _mcp.StopAsync();
-                else await _mcp.StartAsync(_ws, (int)(PortBox.Value ?? McpHost.DefaultPort));
+                else await _mcp.StartAsync(_ws, _pal, (int)(PortBox.Value ?? McpHost.DefaultPort));
             }
             finally
             {
@@ -591,26 +591,16 @@ public partial class MainWindow : Window
 
     // ---- Palette ---------------------------------------------------------------------------
 
-    private const int MaxPalette = 48;
+    private readonly Palette _pal = new();
 
-    private static readonly string[] DefaultPalette =
-    {
-        "#000000", "#ffffff", "#7f7f7f", "#3b2a20", "#6b4226", "#c68642", "#e0ac69", "#f5d0b0",
-        "#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#1abc9c", "#3498db", "#8b5cf6", "#e84393",
-    };
-
-    private readonly List<Color> _palette = new();
+    private static Color ToColor(Rgba c) => Color.FromArgb(c.A, c.R, c.G, c.B);
+    private static Rgba ToRgba(Color c) => new(c.R, c.G, c.B, c.A);
 
     private void BuildPaletteControls()
     {
-        var saved = AppSettings.LoadPalette() ?? DefaultPalette.ToList();
-        foreach (var hex in saved)
-        {
-            try { var c = Rgba.Parse(hex); _palette.Add(Color.FromArgb(c.A, c.R, c.G, c.B)); }
-            catch (ArgumentException) { /* skip a damaged entry */ }
-        }
-
         PaletteAddBtn.Click += (_, _) => AddToPalette(ColorPick.Color);
+        // The MCP tools change the same palette from a background thread.
+        _pal.Changed += () => Dispatcher.UIThread.Post(RebuildPalette);
         AppTheme.Changed += RebuildPalette;       // swatch outlines use theme colors
         Loc.Changed += () => Dispatcher.UIThread.Post(RebuildPalette);   // the context menu text
         RebuildPalette();
@@ -618,11 +608,8 @@ public partial class MainWindow : Window
 
     private void AddToPalette(Color c)
     {
-        if (_palette.Contains(c)) return;   // already there: it is highlighted
-        if (_palette.Count >= MaxPalette) { ShowStatus(Loc.T("palette.full", MaxPalette)); return; }
-        _palette.Add(c);
-        SavePalette();
-        RebuildPalette();
+        if (_pal.Add(ToRgba(c)) == PaletteAdd.Full) ShowStatus(Loc.T("palette.full", Palette.Max));
+        // Added: Changed rebuilds the swatches. Already there: it is highlighted.
     }
 
     /// <summary>The eyedropper (tool or middle button) selects the color and keeps it in the palette.</summary>
@@ -632,29 +619,23 @@ public partial class MainWindow : Window
         if (c.A > 0) AddToPalette(c);   // a transparent pixel would only add an invisible swatch
     }
 
-    private void SavePalette() =>
-        AppSettings.SavePalette(_palette.Select(c => new Rgba(c.R, c.G, c.B, c.A).ToString()));
-
     private void RebuildPalette()
     {
         PalettePanel.Children.Clear();
-        for (var i = 0; i < _palette.Count; i++)
+        var colors = _pal.Snapshot();
+        for (var i = 0; i < colors.Count; i++)
         {
-            var color = _palette[i];
+            var rgba = colors[i];
+            var color = ToColor(rgba);
             var remove = new MenuItem { Header = Loc.T("palette.remove") };
-            remove.Click += (_, _) =>
-            {
-                _palette.Remove(color);
-                SavePalette();
-                RebuildPalette();
-            };
+            remove.Click += (_, _) => _pal.Remove(rgba);
             var tile = new Border
             {
                 Width = 26, Height = 26, CornerRadius = new CornerRadius(5), BorderThickness = new Thickness(2),
                 Background = new SolidColorBrush(color), Cursor = new Cursor(StandardCursorType.Hand),
                 Tag = color, ContextMenu = new ContextMenu { Items = { remove } },
             };
-            var hex = new Rgba(color.R, color.G, color.B, color.A).ToString();
+            var hex = rgba.ToString();
             ToolTip.SetTip(tile, i < 9 ? $"{hex}  ({i + 1})" : hex);
             tile.PointerPressed += (_, e) =>
             {
@@ -734,7 +715,8 @@ public partial class MainWindow : Window
                   : e.Key is >= Key.NumPad1 and <= Key.NumPad9 ? e.Key - Key.NumPad1 : -1;
         if (digit >= 0)
         {
-            if (digit < _palette.Count) ColorPick.Color = _palette[digit];
+            var saved = _pal.Snapshot();
+            if (digit < saved.Count) ColorPick.Color = ToColor(saved[digit]);
             e.Handled = true;
             return;
         }
