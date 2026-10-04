@@ -333,6 +333,10 @@ public partial class MainWindow : Window
     private void ApplyLanguage()
     {
         Tr.Refresh();
+        // The closed combo shows a copy of the selected item's text taken when it was picked; re-select to refresh it.
+        var layer = LayerCombo.SelectedIndex;
+        LayerCombo.SelectedIndex = -1;
+        LayerCombo.SelectedIndex = layer;
         ToolName.Text = Loc.T(_toolKey);
         RefreshLayerTexts();
         if (_statusIsHint) StatusText.Text = Loc.T("status.hint");
