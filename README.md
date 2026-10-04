@@ -29,8 +29,8 @@
 
 **Painting**
 - 64×64 skin canvas (Minecraft 1.8+ format) with transparency.
-- Pencil, eraser, fill and color picker. Right mouse button erases on the skin map.
-- **Lighten / Darken** brush: makes pixels lighter or darker while keeping their hue and transparency. Left mouse button lightens, right mouse button darkens; set the strength (1–50%) in the options bar. One stroke changes each pixel once. With this brush, a right-click on empty space (or the middle button) still rotates the 3D view.
+- Pencil, eraser, fill and color picker. Right mouse button erases on the skin map; the middle button picks a color with any tool.
+- **Lighten / Darken** brush: makes pixels lighter or darker while keeping their hue and transparency. Left mouse button lightens, right mouse button darkens; set the strength (1–50%) in the options bar. One stroke changes each pixel once. With this brush, right-dragging on empty space still rotates the 3D view.
 - Color picker with alpha and manual hex input: `#RRGGBB`, `#RGB` or `#RRGGBBAA`.
 - Undo and redo (100 steps per tab).
 
@@ -281,7 +281,8 @@ Invalid input returns a readable error (for example `No tab '99'` or `Invalid co
 | Open / Save PNG | `Ctrl+O` / `Ctrl+S` |
 | New tab / Close tab | `Ctrl+T` / `Ctrl+W` |
 | Paint on the 3D model | left mouse button |
-| Rotate the 3D model | right (or middle) mouse button |
+| Rotate the 3D model | right mouse button (with Lighten/Darken: on empty space) |
+| Pick a color (any tool) | middle mouse button, on the model or the skin map |
 | Zoom the 3D model | mouse wheel |
 | Erase on the skin map | right mouse button |
 | Rename / close a tab | double-click / middle-click or `×` |

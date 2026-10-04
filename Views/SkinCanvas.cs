@@ -130,6 +130,12 @@ public sealed class SkinCanvas : Control
         base.OnPointerPressed(e);
         if (_doc is null || ToPixel(e.GetPosition(this)) is not { } px) return;
         var props = e.GetCurrentPoint(this).Properties;
+        if (props.IsMiddleButtonPressed)   // the middle button is a color picker with every tool
+        {
+            var c = _doc.GetPixel(px.x, px.y);
+            ColorPicked?.Invoke(Color.FromArgb(c.A, c.R, c.G, c.B));
+            return;
+        }
         var erase = props.IsRightButtonPressed;
         if (!props.IsLeftButtonPressed && !erase) return;
 

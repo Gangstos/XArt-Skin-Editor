@@ -117,7 +117,7 @@ public static class Loc
 
             new[] { "panel.preview", "3D PREVIEW", "3D-ПРЕДПРОСМОТР", "VISTA PREVIA 3D", "PRÉ-VISUALIZAÇÃO 3D", "3D-VORSCHAU", "APERÇU 3D", "ANTEPRIMA 3D", "3D プレビュー", "3D-ПЕРЕГЛЯД", "3D АЛДЫН АЛА КӨРУ", "PODGLĄD 3D" },
             new[] { "panel.map", "SKIN MAP  ·  64×64", "КАРТА СКИНА  ·  64×64", "MAPA DE SKIN  ·  64×64", "MAPA DA SKIN  ·  64×64", "SKIN-KARTE  ·  64×64", "CARTE DU SKIN  ·  64×64", "MAPPA SKIN  ·  64×64", "スキンマップ  ·  64×64", "КАРТА СКІНА  ·  64×64", "СКИН КАРТАСЫ  ·  64×64", "MAPA SKINA  ·  64×64" },
-            new[] { "status.hint", "Left mouse paints  ·  Right mouse rotates  ·  Wheel zooms", "ЛКМ — рисовать  ·  ПКМ — вращать  ·  Колесо — масштаб", "Clic izquierdo pinta  ·  Clic derecho gira  ·  Rueda: zoom", "Botão esquerdo pinta  ·  Botão direito gira  ·  Roda: zoom", "Linke Maustaste malt  ·  Rechte dreht  ·  Mausrad zoomt", "Clic gauche : dessiner  ·  Clic droit : pivoter  ·  Molette : zoom", "Tasto sinistro disegna  ·  Tasto destro ruota  ·  Rotella: zoom", "左ボタン：描画  ·  右ボタン：回転  ·  ホイール：ズーム", "ЛКМ — малювати  ·  ПКМ — обертати  ·  Колесо — масштаб", "Сол жақ батырма — сурет салу  ·  Оң жақ — айналдыру  ·  Дөңгелек — масштаб", "LPM — rysowanie  ·  PPM — obracanie  ·  Kółko — powiększenie" },
+            new[] { "status.hint", "Left mouse paints  ·  Right mouse rotates  ·  Middle mouse picks a color  ·  Wheel zooms", "ЛКМ — рисовать  ·  ПКМ — вращать  ·  Средняя — взять цвет  ·  Колесо — масштаб", "Clic izquierdo pinta  ·  Derecho gira  ·  Central toma color  ·  Rueda: zoom", "Botão esquerdo pinta  ·  Direito gira  ·  Do meio pega a cor  ·  Roda: zoom", "Linke Maustaste malt  ·  Rechte dreht  ·  Mittlere nimmt Farbe  ·  Mausrad zoomt", "Clic gauche : dessiner  ·  Droit : pivoter  ·  Milieu : pipette  ·  Molette : zoom", "Tasto sinistro disegna  ·  Destro ruota  ·  Centrale preleva colore  ·  Rotella: zoom", "左：描画  ·  右：回転  ·  中：スポイト  ·  ホイール：ズーム", "ЛКМ — малювати  ·  ПКМ — обертати  ·  Середня — взяти колір  ·  Колесо — масштаб", "Сол — сурет салу  ·  Оң — айналдыру  ·  Ортаңғы — түс алу  ·  Дөңгелек — масштаб", "LPM — rysowanie  ·  PPM — obracanie  ·  Środkowy — pobierz kolor  ·  Kółko — powiększenie" },
 
             new[] { "mcp.off", "off", "выкл.", "apagado", "desligado", "aus", "arrêté", "spento", "オフ", "вимк.", "өшірулі", "wył." },
             new[] { "mcp.port", "PORT", "ПОРТ", "PUERTO", "PORTA", "PORT", "PORT", "PORTA", "ポート", "ПОРТ", "ПОРТ", "PORT" },
@@ -203,7 +203,7 @@ public static class Loc
         ["layer.head"] = "帽子（头部外层）", ["layer.body"] = "外套（身体外层）",
         ["layer.rarm"] = "右袖", ["layer.larm"] = "左袖", ["layer.rleg"] = "右裤腿", ["layer.lleg"] = "左裤腿",
         ["panel.preview"] = "3D 预览", ["panel.map"] = "皮肤贴图  ·  64×64",
-        ["status.hint"] = "左键绘制  ·  右键旋转  ·  滚轮缩放",
+        ["status.hint"] = "左键绘制  ·  右键旋转  ·  中键取色  ·  滚轮缩放",
         ["mcp.off"] = "已关闭", ["mcp.port"] = "端口", ["mcp.start"] = "启动服务器", ["mcp.stop"] = "停止服务器",
         ["mcp.endpoint"] = "地址", ["mcp.connect"] = "连接代理", ["mcp.copy"] = "复制", ["mcp.copied"] = "已复制",
         ["mcp.where"] = "在终端中运行。", ["mcp.where_file"] = "添加到 {0}",

@@ -184,8 +184,19 @@ public sealed class ModelView : Control
 
         // The lighten/darken brush darkens with the right button when it is pressed on the model,
         // ...but a right click on empty space (nothing to darken there) still rotates the view.
+        // The middle button is a color picker with every tool.
+        if (props.IsMiddleButtonPressed)
+        {
+            if (_doc is not null && Pick(pos) is { } m)
+            {
+                var c = _doc.GetPixel(m.Tx, m.Ty);
+                ColorPicked?.Invoke(Color.FromArgb(c.A, c.R, c.G, c.B));
+            }
+            return;
+        }
+
         var shadeRight = Tool == Tool.Shade && props.IsRightButtonPressed && _doc is not null && Pick(pos) is not null;
-        if (props.IsMiddleButtonPressed || (props.IsRightButtonPressed && !shadeRight))
+        if (props.IsRightButtonPressed && !shadeRight)
         {
             _orbit = true; _last = pos;
             e.Pointer.Capture(this);
