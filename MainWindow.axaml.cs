@@ -22,7 +22,6 @@ public partial class MainWindow : Window
 {
     private static readonly IBrush Off = new SolidColorBrush(Color.Parse("#ef4444"));
     private static readonly IBrush On = new SolidColorBrush(Color.Parse("#22c55e"));
-    private static readonly IBrush Muted = new SolidColorBrush(Color.Parse("#8a8fb5"));
     private const string EyeIcon = "M2,12 C5,7 8.5,5 12,5 C15.5,5 19,7 22,12 C19,17 15.5,19 12,19 C8.5,19 5,17 2,12 Z M12,9 A3,3 0 1 1 11.99,9 Z";
     private const string CloseIcon = "M2,2 L10,10 M10,2 L2,10";
 
@@ -121,6 +120,7 @@ public partial class MainWindow : Window
         BuildMcpControls();
         BuildTabs();
         BuildLanguageControls();
+        BuildThemeControls();
 
         // Optional: `XArtSkinEditor --mcp-port 5199` starts the MCP server right away (it is off by default).
         Opened += async (_, _) =>
@@ -279,6 +279,23 @@ public partial class MainWindow : Window
         ApplyLanguage();
     }
 
+    // ---- Theme -----------------------------------------------------------------------------
+
+    private void BuildThemeControls()
+    {
+        foreach (var t in AppTheme.All) ThemeCombo.Items.Add(new ComboBoxItem { Content = t.Name });
+        ThemeCombo.SelectedIndex = Array.IndexOf(AppTheme.All, AppTheme.Current);
+        ThemeCombo.SelectionChanged += (_, _) =>
+        {
+            if (ThemeCombo.SelectedIndex < 0) return;
+            var t = AppTheme.All[ThemeCombo.SelectedIndex];
+            if (t == AppTheme.Current) return;
+            AppTheme.Apply(t);
+            AppSettings.SaveTheme(t.Id);
+        };
+        AppTheme.Changed += UpdateMcpUi;   // its status text is coloured in code
+    }
+
     private static int IndexOfLanguage(string code)
     {
         for (var i = 0; i < Loc.Languages.Count; i++)
@@ -416,7 +433,7 @@ public partial class MainWindow : Window
         else
         {
             McpStatus.Text = Loc.T(running ? "mcp.status_on" : "mcp.status_off");
-            McpStatus.Foreground = Muted;
+            McpStatus.Foreground = AppTheme.Brush("Muted");
         }
     }
 

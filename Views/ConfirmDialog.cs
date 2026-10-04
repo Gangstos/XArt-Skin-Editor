@@ -7,7 +7,7 @@ using Avalonia.Media;
 
 namespace XArtSkinEditor.Views;
 
-/// <summary>Small modal Yes/No dialog in the app's dark style. Cancel is focused so Enter never confirms by accident.</summary>
+/// <summary>Small modal Yes/No dialog in the app's current theme. Cancel is focused so Enter never confirms by accident.</summary>
 public static class ConfirmDialog
 {
     public static async Task<bool> AskAsync(Window owner, string title, string message, string confirmText, bool danger = true)
@@ -21,8 +21,8 @@ public static class ConfirmDialog
             CanResize = false,
             ShowInTaskbar = false,
             WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Background = new SolidColorBrush(Color.Parse("#141628")),
-            Foreground = new SolidColorBrush(Color.Parse("#e7e9f5")),
+            Background = AppTheme.Brush("Pill"),
+            Foreground = AppTheme.Brush("Fg"),
             Icon = owner.Icon,
         };
 
@@ -31,8 +31,8 @@ public static class ConfirmDialog
             Content = Core.Loc.T("dlg.cancel"),
             MinWidth = 96,
             HorizontalContentAlignment = HorizontalAlignment.Center,
-            Background = new SolidColorBrush(Color.Parse("#1b1e3a")),
-            BorderBrush = new SolidColorBrush(Color.Parse("#2a2d55")),
+            Background = AppTheme.Brush("Btn"),
+            BorderBrush = AppTheme.Brush("Sep"),
             BorderThickness = new Thickness(1),
             CornerRadius = new CornerRadius(8),
             Padding = new Thickness(14, 8),
@@ -42,7 +42,7 @@ public static class ConfirmDialog
             Content = confirmText,
             MinWidth = 96,
             HorizontalContentAlignment = HorizontalAlignment.Center,
-            Background = new SolidColorBrush(Color.Parse(danger ? "#b42335" : "#7c3aed")),
+            Background = danger ? new SolidColorBrush(Color.Parse("#b42335")) : AppTheme.Brush("AccentBtn"),
             Foreground = Brushes.White,
             FontWeight = FontWeight.SemiBold,
             CornerRadius = new CornerRadius(8),
@@ -58,7 +58,7 @@ public static class ConfirmDialog
             Children =
             {
                 new TextBlock { Text = title, FontSize = 17, FontWeight = FontWeight.SemiBold },
-                new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap, Foreground = new SolidColorBrush(Color.Parse("#a9aed2")) },
+                new TextBlock { Text = message, TextWrapping = TextWrapping.Wrap, Foreground = AppTheme.Brush("DialogMuted") },
                 new StackPanel
                 {
                     Orientation = Orientation.Horizontal,

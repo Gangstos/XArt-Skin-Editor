@@ -7,6 +7,7 @@
         <FluentTheme>
             <FluentTheme.Palettes>
                 <ColorPaletteResources x:Key="Dark" Accent="#8b5cf6" RegionColor="#0d0e1a" />
+                <ColorPaletteResources x:Key="Light" Accent="#f59e0b" RegionColor="#fffaf0" />
             </FluentTheme.Palettes>
         </FluentTheme>
         <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />

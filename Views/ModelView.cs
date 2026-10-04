@@ -17,7 +17,7 @@ namespace XArtSkinEditor.Views;
 /// </summary>
 public sealed class ModelView : Control
 {
-    private static readonly Rgba Background = new(0x12, 0x13, 0x26, 255);
+    private static Rgba Background => AppTheme.ViewportColor;
 
     private SkinDocument? _doc;
     private ModelSettings? _settings;
@@ -75,6 +75,7 @@ public sealed class ModelView : Control
     {
         ClipToBounds = true;
         Cursor = new Cursor(StandardCursorType.Cross);
+        AppTheme.Changed += RequestFrame;   // the viewport background belongs to the theme
     }
 
     public void ResetView()
