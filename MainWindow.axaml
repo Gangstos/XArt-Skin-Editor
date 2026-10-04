@@ -1,0 +1,428 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:v="using:XArtSkinEditor.Views"
+        x:Class="XArtSkinEditor.MainWindow"
+        Width="1180" Height="600" MinWidth="960" MinHeight="500"
+        WindowStartupLocation="CenterScreen"
+        Background="#0b0c18" Foreground="#e7e9f5"
+        Icon="avares://XArtSkinEditor/Assets/XArt_Icon_256.png"
+        Title="XArt Skin Editor">
+
+    <Window.Styles>
+        <Style Selector="TextBlock.h">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#8a8fb5" />
+            <Setter Property="LetterSpacing" Value="1" />
+        </Style>
+        <Style Selector="TextBlock.muted">
+            <Setter Property="Foreground" Value="#8a8fb5" />
+        </Style>
+
+        <!-- Panel chrome (right dock + document tabs) -->
+        <Style Selector="Border.panelHead">
+            <Setter Property="Background" Value="#181a33" />
+            <Setter Property="BorderBrush" Value="#23264a" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="12,7" />
+        </Style>
+        <Style Selector="Border.vsep">
+            <Setter Property="Width" Value="1" />
+            <Setter Property="Background" Value="#2a2d55" />
+            <Setter Property="Margin" Value="4,6" />
+        </Style>
+        <Style Selector="Border.hsep">
+            <Setter Property="Height" Value="1" />
+            <Setter Property="Background" Value="#23264a" />
+            <Setter Property="Margin" Value="6,4" />
+        </Style>
+
+        <!-- Vector icons -->
+        <Style Selector="Path.ic">
+            <Setter Property="Width" Value="24" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Stretch" Value="None" />
+            <Setter Property="Stroke" Value="#aab0d6" />
+            <Setter Property="StrokeThickness" Value="1.8" />
+            <Setter Property="StrokeLineCap" Value="Round" />
+            <Setter Property="StrokeJoin" Value="Round" />
+        </Style>
+
+        <!-- Toolbar icon buttons (Button / ToggleButton / RadioButton) -->
+        <Style Selector=":is(Button).icon">
+            <Setter Property="Width" Value="42" />
+            <Setter Property="Height" Value="42" />
+            <Setter Property="Margin" Value="0,2" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="bd" Background="Transparent" BorderBrush="Transparent" BorderThickness="1" CornerRadius="8">
+                        <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector=":is(Button).icon:pointerover /template/ Border#bd">
+            <Setter Property="Background" Value="#1f2247" />
+        </Style>
+        <Style Selector=":is(Button).icon:pointerover Path.ic">
+            <Setter Property="Stroke" Value="White" />
+        </Style>
+        <Style Selector=":is(Button).icon:checked /template/ Border#bd">
+            <Setter Property="Background" Value="#4a2fb0" />
+            <Setter Property="BorderBrush" Value="#8b5cf6" />
+        </Style>
+        <Style Selector=":is(Button).icon:checked Path.ic">
+            <Setter Property="Stroke" Value="White" />
+        </Style>
+        <Style Selector=":is(Button).icon:pressed /template/ Border#bd">
+            <Setter Property="Background" Value="#33288a" />
+        </Style>
+
+        <!-- Segmented buttons (Steve / Alex) -->
+        <Style Selector="RadioButton.seg">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="bd" Background="#1b1e3a" BorderBrush="#2a2d55" BorderThickness="1" Padding="14,6" CornerRadius="7">
+                        <ContentPresenter Content="{TemplateBinding Content}" HorizontalAlignment="Center" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="RadioButton.seg:pointerover /template/ Border#bd">
+            <Setter Property="Background" Value="#252950" />
+        </Style>
+        <Style Selector="RadioButton.seg:checked /template/ Border#bd">
+            <Setter Property="Background" Value="#5b34c9" />
+            <Setter Property="BorderBrush" Value="#a78bfa" />
+        </Style>
+
+        <!-- Layer rows -->
+        <Style Selector="ToggleButton.layer">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border x:Name="bd" Background="Transparent" CornerRadius="6" Padding="8,6">
+                        <ContentPresenter Content="{TemplateBinding Content}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.layer:pointerover /template/ Border#bd">
+            <Setter Property="Background" Value="#1f2247" />
+        </Style>
+        <Style Selector="ToggleButton.layer:checked /template/ Border#bd">
+            <Setter Property="Background" Value="#241f55" />
+        </Style>
+        <Style Selector="ToggleButton.layer Path.ic">
+            <Setter Property="Opacity" Value="0.3" />
+        </Style>
+        <Style Selector="ToggleButton.layer:checked Path.ic">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="Stroke" Value="#c4b5fd" />
+        </Style>
+
+        <!-- Pills / buttons -->
+        <Style Selector="Button.pill">
+            <Setter Property="Background" Value="#141628" />
+            <Setter Property="BorderBrush" Value="#2a2d55" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="Padding" Value="12,5" />
+            <Setter Property="Foreground" Value="#e7e9f5" />
+        </Style>
+        <Style Selector="Button.pill:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#1d2042" />
+            <Setter Property="BorderBrush" Value="#3a3e78" />
+        </Style>
+        <Style Selector="Button.primary">
+            <Setter Property="Background" Value="#7c3aed" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="CornerRadius" Value="9" />
+            <Setter Property="Padding" Value="12,9" />
+        </Style>
+        <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#8b5cf6" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.danger">
+            <Setter Property="Background" Value="#b42335" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="CornerRadius" Value="9" />
+            <Setter Property="Padding" Value="12,9" />
+        </Style>
+        <Style Selector="Button.danger:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#d12b40" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.soft">
+            <Setter Property="Background" Value="#1b1e3a" />
+            <Setter Property="BorderBrush" Value="#2a2d55" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="7" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.soft:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#252950" />
+        </Style>
+
+        <!-- Document tabs -->
+        <Style Selector="Border.tab">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0,2,0,0" />
+            <Setter Property="CornerRadius" Value="8,8,0,0" />
+            <Setter Property="Padding" Value="14,6,6,6" />
+            <Setter Property="Margin" Value="4,4,0,0" />
+            <Setter Property="MinWidth" Value="120" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Border.tab:pointerover">
+            <Setter Property="Background" Value="#14162d" />
+        </Style>
+        <Style Selector="Border.tab.active">
+            <Setter Property="Background" Value="#181a33" />
+            <Setter Property="BorderBrush" Value="#8b5cf6" />
+        </Style>
+        <Style Selector="Border.tab TextBlock">
+            <Setter Property="Foreground" Value="#8a8fb5" />
+        </Style>
+        <Style Selector="Border.tab.active TextBlock">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.tabclose">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="5" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="Button.tabclose:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#2a2d55" />
+        </Style>
+        <Style Selector="Path.x">
+            <Setter Property="Width" Value="12" />
+            <Setter Property="Height" Value="12" />
+            <Setter Property="Stretch" Value="None" />
+            <Setter Property="Stroke" Value="#aab0d6" />
+            <Setter Property="StrokeThickness" Value="1.6" />
+            <Setter Property="StrokeLineCap" Value="Round" />
+        </Style>
+    </Window.Styles>
+
+    <DockPanel>
+        <!-- Menu bar -->
+        <Border DockPanel.Dock="Top" Background="#090a14" BorderBrush="#1c1f3d" BorderThickness="0,0,0,1" Padding="10,2">
+            <DockPanel>
+                <Button x:Name="McpBtn" DockPanel.Dock="Right" Classes="pill" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Ellipse x:Name="McpDot" Width="9" Height="9" Fill="#ef4444" VerticalAlignment="Center" />
+                        <TextBlock x:Name="McpLabel" Text="MCP Server" FontWeight="SemiBold" Foreground="#ef4444" VerticalAlignment="Center" />
+                        <TextBlock x:Name="McpState" Foreground="#8a8fb5" VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Button.Flyout>
+                        <Flyout Placement="BottomEdgeAlignedRight">
+                            <StackPanel Width="310" Spacing="10">
+                                <TextBlock Text="MCP Server" FontSize="16" FontWeight="SemiBold" />
+                                <TextBlock x:Name="McpStatus" TextWrapping="Wrap" Foreground="#8a8fb5" />
+                                <TextBlock v:Tr.Key="mcp.port" Classes="h" Margin="0,4,0,0" />
+                                <NumericUpDown x:Name="PortBox" Minimum="1024" Maximum="65535" Increment="1"
+                                               FormatString="0" Value="5199" />
+                                <Button x:Name="McpToggleBtn" Classes="primary"
+                                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" />
+                                <StackPanel x:Name="McpInfo" Spacing="6" IsVisible="False">
+                                    <TextBlock v:Tr.Key="mcp.endpoint" Classes="h" />
+                                    <TextBox x:Name="McpUrlBox" IsReadOnly="True" />
+                                    <TextBlock v:Tr.Key="mcp.connect" Classes="h" Margin="0,4,0,0" />
+                                    <TextBox x:Name="McpCmdBox" IsReadOnly="True" TextWrapping="Wrap" />
+                                    <Button x:Name="CopyCmdBtn" Classes="soft" v:Tr.Key="mcp.copy" HorizontalAlignment="Stretch" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <ComboBox x:Name="LanguageCombo" DockPanel.Dock="Right" MinWidth="130" Margin="0,0,10,0" VerticalAlignment="Center" />
+
+                <Image DockPanel.Dock="Left" Source="avares://XArtSkinEditor/Assets/XArt_Icon_256.png" Width="22" Height="22" Margin="2,0,8,0" VerticalAlignment="Center" />
+                <Menu Background="Transparent" VerticalAlignment="Center">
+                    <MenuItem v:Tr.Key="menu.file">
+                        <MenuItem x:Name="MiNew" v:Tr.Key="mi.new" InputGesture="Ctrl+T" />
+                        <MenuItem x:Name="MiClose" v:Tr.Key="mi.close" InputGesture="Ctrl+W" />
+                        <Separator />
+                        <MenuItem x:Name="MiOpen" v:Tr.Key="mi.open" InputGesture="Ctrl+O" />
+                        <MenuItem x:Name="MiSave" v:Tr.Key="mi.save" InputGesture="Ctrl+S" />
+                        <Separator />
+                        <MenuItem x:Name="MiExit" v:Tr.Key="mi.exit" />
+                    </MenuItem>
+                    <MenuItem v:Tr.Key="menu.edit">
+                        <MenuItem x:Name="MiUndo" v:Tr.Key="mi.undo" InputGesture="Ctrl+Z" />
+                        <MenuItem x:Name="MiRedo" v:Tr.Key="mi.redo" InputGesture="Ctrl+Y" />
+                        <Separator />
+                        <MenuItem x:Name="MiClear" v:Tr.Key="mi.clear" />
+                    </MenuItem>
+                    <MenuItem v:Tr.Key="menu.view">
+                        <MenuItem x:Name="MiMap" v:Tr.Key="mi.map" ToggleType="CheckBox" />
+                        <MenuItem x:Name="MiGrid" v:Tr.Key="mi.grid" ToggleType="CheckBox" IsChecked="True" />
+                        <Separator />
+                        <MenuItem x:Name="MiReset" v:Tr.Key="mi.reset" />
+                    </MenuItem>
+                </Menu>
+            </DockPanel>
+        </Border>
+
+        <!-- Options bar -->
+        <Border DockPanel.Dock="Top" Background="#12132a" BorderBrush="#1c1f3d" BorderThickness="0,0,0,1" Padding="12,7">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="10">
+                    <CheckBox x:Name="GridCheck" v:Tr.Key="opt.grid" IsChecked="True" IsVisible="False" VerticalAlignment="Center" />
+                    <Button x:Name="ResetViewBtn" Classes="soft" v:Tr.Key="mi.reset" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="10">
+                    <TextBlock x:Name="ToolName" FontWeight="SemiBold" MinWidth="52" VerticalAlignment="Center" />
+                    <Border x:Name="Swatch" Width="24" Height="24" CornerRadius="5" BorderBrush="#4a4f85" BorderThickness="1" VerticalAlignment="Center" />
+                    <TextBox x:Name="SwatchHex" Text="#8B5CF6" Width="108" MaxLength="9" VerticalAlignment="Center"
+                             v:Tr.Tip="opt.hex.tip" />
+                    <Border Classes="vsep" />
+                    <TextBlock v:Tr.Key="opt.paint_on" Classes="muted" VerticalAlignment="Center" />
+                    <ComboBox x:Name="LayerCombo" SelectedIndex="0">
+                        <ComboBoxItem v:Tr.Key="layer.visible" />
+                        <ComboBoxItem v:Tr.Key="layer.base" />
+                        <ComboBoxItem v:Tr.Key="layer.overlay" />
+                    </ComboBox>
+                    <Border Classes="vsep" />
+                    <TextBlock v:Tr.Key="opt.model" Classes="muted" VerticalAlignment="Center" />
+                    <StackPanel Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
+                        <RadioButton x:Name="ModelSteve" Classes="seg" GroupName="model" Content="Steve" IsChecked="True" />
+                        <RadioButton x:Name="ModelAlex" Classes="seg" GroupName="model" Content="Alex" />
+                    </StackPanel>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Status bar -->
+        <Border DockPanel.Dock="Bottom" Background="#090a14" BorderBrush="#1c1f3d" BorderThickness="0,1,0,0" Padding="14,5">
+            <DockPanel>
+                <TextBlock x:Name="CursorText" DockPanel.Dock="Right" Classes="muted" />
+                <TextBlock x:Name="StatusText" Classes="muted" />
+            </DockPanel>
+        </Border>
+
+        <!-- Left toolbar -->
+        <Border DockPanel.Dock="Left" Width="58" Background="#10112a" BorderBrush="#1c1f3d" BorderThickness="0,0,1,0">
+            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                <StackPanel Margin="0,8">
+                    <RadioButton x:Name="ToolPencil" Classes="icon" GroupName="tool" IsChecked="True" v:Tr.Tip="tip.pencil">
+                        <Path Classes="ic" Data="M4,20 L5.2,15.4 L16.2,4.4 L19.6,7.8 L8.6,18.8 Z M14,6.6 L17.4,10" />
+                    </RadioButton>
+                    <RadioButton x:Name="ToolEraser" Classes="icon" GroupName="tool" v:Tr.Tip="tip.eraser">
+                        <Path Classes="ic" Data="M4,16 L13,7 L19,13 L12,20 L7.5,20 Z M12,20 H21" />
+                    </RadioButton>
+                    <RadioButton x:Name="ToolFill" Classes="icon" GroupName="tool" v:Tr.Tip="tip.fill">
+                        <Path Classes="ic" Data="M4.5,12 L11.5,5 L18.5,12 L12,18.5 Z M11.5,5 L9,2.5 M20,14.5 C20,14.5 22,17 22,18.2 A2,2 0 0 1 18,18.2 C18,17 20,14.5 20,14.5 Z" />
+                    </RadioButton>
+                    <RadioButton x:Name="ToolPicker" Classes="icon" GroupName="tool" v:Tr.Tip="tip.picker">
+                        <Path Classes="ic" Data="M5,19 L5.8,15.2 L14.5,6.5 L17.5,9.5 L8.8,18.2 Z M14.5,6.5 L16.8,4.2 A2.1,2.1 0 0 1 19.8,7.2 L17.5,9.5" />
+                    </RadioButton>
+
+                    <Border Classes="hsep" />
+
+                    <Button x:Name="OpenBtn" Classes="icon" v:Tr.Tip="mi.open">
+                        <Path Classes="ic" Data="M3,7 H9.5 L11.5,9 H21 V19 H3 Z" />
+                    </Button>
+                    <Button x:Name="SaveBtn" Classes="icon" v:Tr.Tip="mi.save">
+                        <Path Classes="ic" Data="M5,3 H17 L21,7 V21 H5 Z M8,3 V8 H15 V3 M8,21 V14 H17 V21" />
+                    </Button>
+
+                    <Border Classes="hsep" />
+
+                    <Button x:Name="UndoBtn" Classes="icon" v:Tr.Tip="tip.undo">
+                        <Path Classes="ic" Data="M9,5 L4,10 L9,15 M4,10 H14 A6,6 0 0 1 14,22 H10" />
+                    </Button>
+                    <Button x:Name="RedoBtn" Classes="icon" v:Tr.Tip="tip.redo">
+                        <Path Classes="ic" Data="M15,5 L20,10 L15,15 M20,10 H10 A6,6 0 0 0 10,22 H14" />
+                    </Button>
+                    <Button x:Name="ClearBtn" Classes="icon" v:Tr.Tip="mi.clear">
+                        <Path Classes="ic" Data="M5,7 H19 M9,7 V4 H15 V7 M7,7 L8,21 H16 L17,7 M10,11 V17 M14,11 V17" />
+                    </Button>
+
+                    <Border Classes="hsep" />
+
+                    <ToggleButton x:Name="MapToggle" Classes="icon" v:Tr.Tip="tip.map">
+                        <Path Classes="ic" Data="M3,3 H21 V21 H3 Z M3,9 H21 M3,15 H21 M9,3 V21 M15,3 V21" />
+                    </ToggleButton>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Right dock: panels -->
+        <Border DockPanel.Dock="Right" Width="292" Background="#10112a" BorderBrush="#1c1f3d" BorderThickness="1,0,0,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <Border Classes="panelHead">
+                        <DockPanel>
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4">
+                                <Button x:Name="ShowAllBtn" Classes="soft" v:Tr.Key="btn.all_on" Padding="8,2" FontSize="11" />
+                                <Button x:Name="HideAllBtn" Classes="soft" v:Tr.Key="btn.all_off" Padding="8,2" FontSize="11" />
+                            </StackPanel>
+                            <TextBlock v:Tr.Key="panel.layers" Classes="h" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+                    <StackPanel Margin="6,6,6,10">
+                        <TextBlock v:Tr.Key="layers.hint" Classes="muted" FontSize="11" TextWrapping="Wrap" Margin="8,0,0,4" />
+                        <StackPanel x:Name="OverlayPanel" Spacing="1" />
+                    </StackPanel>
+
+                    <Border Classes="panelHead">
+                        <TextBlock v:Tr.Key="panel.color" Classes="h" />
+                    </Border>
+                    <Border Padding="12">
+                        <ColorView x:Name="ColorPick" Color="#8b5cf6" IsAlphaVisible="True" IsColorSpectrumVisible="True"
+                                   IsColorPaletteVisible="False" IsColorComponentsVisible="False" IsAccentColorsVisible="False" />
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Document tabs + workspace -->
+        <DockPanel>
+        <Border DockPanel.Dock="Top" Background="#0e0f20" BorderBrush="#1c1f3d" BorderThickness="0,0,0,1">
+            <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="TabStrip" Orientation="Horizontal">
+                    <Button x:Name="NewTabBtn" Classes="icon" Width="30" Height="30" Margin="8,6,0,0" VerticalAlignment="Center"
+                            v:Tr.Tip="tab.new">
+                        <Path Classes="ic" Data="M12,5 V19 M5,12 H19" />
+                    </Button>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Workspace: 3D preview + optional skin map, like document windows -->
+        <Grid x:Name="Workspace" ColumnDefinitions="*,0,0" Margin="8">
+            <Border Grid.Column="0" BorderBrush="#23264a" BorderThickness="1" CornerRadius="8" ClipToBounds="True" Background="#121326">
+                <DockPanel>
+                    <Border DockPanel.Dock="Top" Classes="panelHead" Padding="12,5">
+                        <TextBlock v:Tr.Key="panel.preview" Classes="h" />
+                    </Border>
+                    <v:ModelView x:Name="Model" />
+                </DockPanel>
+            </Border>
+
+            <GridSplitter x:Name="MapSplitter" Grid.Column="1" Width="8" Background="Transparent" IsVisible="False" />
+
+            <Border x:Name="MapPanel" Grid.Column="2" BorderBrush="#23264a" BorderThickness="1" CornerRadius="8"
+                    ClipToBounds="True" Background="#0d0e1a" IsVisible="False">
+                <DockPanel>
+                    <Border DockPanel.Dock="Top" Classes="panelHead" Padding="12,5">
+                        <TextBlock v:Tr.Key="panel.map" Classes="h" />
+                    </Border>
+                    <v:SkinCanvas x:Name="Canvas" />
+                </DockPanel>
+            </Border>
+        </Grid>
+        </DockPanel>
+    </DockPanel>
+</Window>

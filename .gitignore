@@ -1,0 +1,11 @@
+# Build output
+bin/
+obj/
+out/
+.vs/
+*.user
+
+# Author's local helper scripts (hard-coded to a private SDK path)
+shell.cmd
+build-win-x64.cmd
+build-linux-x64.cmd
