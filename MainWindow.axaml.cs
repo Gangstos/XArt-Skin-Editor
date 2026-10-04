@@ -360,8 +360,36 @@ public partial class MainWindow : Window
             await System.Threading.Tasks.Task.Delay(1200);
             CopyCmdBtn.Content = Loc.T("mcp.copy");
         };
+        foreach (var c in McpClients) McpClientCombo.Items.Add(c.Name);
+        McpClientCombo.SelectedIndex = 0;
+        McpClientCombo.SelectionChanged += (_, _) => UpdateMcpSnippet();
         _mcp.StateChanged += () => Dispatcher.UIThread.Post(UpdateMcpUi);
         UpdateMcpUi();
+    }
+
+    // How to attach each agent. File = where the JSON goes; null = a terminal command; ChatGPT needs a tunnel.
+    private sealed record McpClient(string Name, string? File, Func<string, string> Snippet, bool Tunnel = false);
+
+    private static readonly McpClient[] McpClients =
+    {
+        new("Claude Code", null, u => $"claude mcp add --transport http xart-skin {u}"),
+        new("Cursor", "~/.cursor/mcp.json", u => Json("mcpServers", $"\"url\": \"{u}\"")),
+        new("GitHub Copilot (VS Code)", ".vscode/mcp.json", u => Json("servers", $"\"type\": \"http\", \"url\": \"{u}\"")),
+        new("Gemini CLI", null, u => $"gemini mcp add --transport http xart-skin {u}"),
+        new("Antigravity", "mcp_config.json", u => Json("mcpServers", $"\"serverUrl\": \"{u}\"")),
+        new("ChatGPT", null, u => $"cloudflared tunnel --url {u.Replace("/mcp", "")}", Tunnel: true),
+    };
+
+    private static string Json(string root, string body) =>
+        $"{{\n  \"{root}\": {{\n    \"xart-skin\": {{ {body} }}\n  }}\n}}";
+
+    private void UpdateMcpSnippet()
+    {
+        var i = Math.Max(0, McpClientCombo.SelectedIndex);
+        var c = McpClients[i];
+        McpCmdBox.Text = c.Snippet(_mcp.Url);
+        McpWhere.Text = c.Tunnel ? Loc.T("mcp.chatgpt")
+            : c.File is { } f ? Loc.T("mcp.where_file", f) : Loc.T("mcp.where");
     }
 
     private void UpdateMcpUi()
@@ -378,7 +406,7 @@ public partial class MainWindow : Window
         McpToggleBtn.Classes.Set("danger", running);
         McpInfo.IsVisible = running;
         McpUrlBox.Text = _mcp.Url;
-        McpCmdBox.Text = $"claude mcp add --transport http xart-skin {_mcp.Url}";
+        UpdateMcpSnippet();
 
         if (_mcp.Error is { } err)
         {

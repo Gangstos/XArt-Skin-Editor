@@ -162,28 +162,66 @@ Start it without clicking: `XArtSkinEditor --mcp-port 5199`.
 
 Start the editor and the server first, then connect.
 
-**Claude Code** ([docs](https://docs.claude.com/en/docs/claude-code/overview)):
+The server window has an **agent picker**: choose your client and it shows the exact command or config for your port, with a Copy button. The same snippets by hand (replace the port if you changed it):
+
+**Claude Code** ([docs](https://docs.claude.com/en/docs/claude-code/overview)). Check it with `/mcp`:
 
 ```bash
 claude mcp add --transport http xart-skin http://127.0.0.1:5199/mcp
 ```
 
-Check it with `/mcp` inside Claude Code.
+**Gemini CLI** ([docs](https://github.com/google-gemini/gemini-cli)):
 
-**Other clients** that support HTTP transport and the `.mcp.json` format:
+```bash
+gemini mcp add --transport http xart-skin http://127.0.0.1:5199/mcp
+```
+
+**Cursor** ([docs](https://docs.cursor.com/context/mcp)): `~/.cursor/mcp.json` (all projects) or `.cursor/mcp.json` (one project):
 
 ```json
 {
   "mcpServers": {
+    "xart-skin": { "url": "http://127.0.0.1:5199/mcp" }
+  }
+}
+```
+
+**GitHub Copilot in VS Code** ([docs](https://code.visualstudio.com/docs/copilot/customization/mcp-servers)): `.vscode/mcp.json`, then use Copilot Chat in **Agent** mode:
+
+```json
+{
+  "servers": {
     "xart-skin": { "type": "http", "url": "http://127.0.0.1:5199/mcp" }
   }
 }
 ```
 
+**Antigravity** ([site](https://antigravity.google)): open the MCP servers menu in the agent panel, choose *Manage MCP Servers → View raw config* (`mcp_config.json`) and add:
+
+```json
+{
+  "mcpServers": {
+    "xart-skin": { "serverUrl": "http://127.0.0.1:5199/mcp" }
+  }
+}
+```
+
+**ChatGPT** ([docs](https://platform.openai.com/docs/guides/developer-mode)) runs in the cloud and cannot reach `127.0.0.1`. It needs a public HTTPS address, so you have to open a tunnel, for example with [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/):
+
+```bash
+cloudflared tunnel --url http://127.0.0.1:5199
+```
+
+Then in ChatGPT enable developer mode and add a connector (Settings → Connectors) with the printed `https://….trycloudflare.com` address plus `/mcp`. **Read Security below first:** the server has no password, so anyone who learns the tunnel URL can draw in your editor. Close the tunnel when you finish.
+
+Any other client that supports MCP over HTTP (Streamable HTTP) works the same way with the endpoint above.
+
+> Menu names and config keys of these tools change between versions. If a snippet does not work, check the client's own MCP docs: the endpoint and the transport (Streamable HTTP) stay the same.
+
 ### Security
 
 - The server listens on `127.0.0.1` only.
-- There is **no authentication**: any program on your computer that knows the port can draw in the editor. Do not expose the port (tunnels, port forwarding).
+- There is **no authentication**: any program on your computer that knows the port can draw in the editor. Do not expose the port (port forwarding, tunnels) except briefly for ChatGPT, as described above.
 - File access is limited to `load_png` and `export_png`, on the path the agent passes.
 - Turn the server off when you do not need it.
 

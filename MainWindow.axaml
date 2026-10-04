@@ -225,7 +225,7 @@
                     </StackPanel>
                     <Button.Flyout>
                         <Flyout Placement="BottomEdgeAlignedRight">
-                            <StackPanel Width="310" Spacing="10">
+                            <StackPanel Width="360" Spacing="10">
                                 <TextBlock Text="MCP Server" FontSize="16" FontWeight="SemiBold" />
                                 <TextBlock x:Name="McpStatus" TextWrapping="Wrap" Foreground="#8a8fb5" />
                                 <TextBlock v:Tr.Key="mcp.port" Classes="h" Margin="0,4,0,0" />
@@ -237,7 +237,10 @@
                                     <TextBlock v:Tr.Key="mcp.endpoint" Classes="h" />
                                     <TextBox x:Name="McpUrlBox" IsReadOnly="True" />
                                     <TextBlock v:Tr.Key="mcp.connect" Classes="h" Margin="0,4,0,0" />
-                                    <TextBox x:Name="McpCmdBox" IsReadOnly="True" TextWrapping="Wrap" />
+                                    <ComboBox x:Name="McpClientCombo" HorizontalAlignment="Stretch" />
+                                    <TextBlock x:Name="McpWhere" TextWrapping="Wrap" Foreground="#8a8fb5" FontSize="12" />
+                                    <TextBox x:Name="McpCmdBox" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True"
+                                             FontFamily="Consolas, Menlo, monospace" FontSize="12" MaxHeight="150" />
                                     <Button x:Name="CopyCmdBtn" Classes="soft" v:Tr.Key="mcp.copy" HorizontalAlignment="Stretch" />
                                 </StackPanel>
                             </StackPanel>
