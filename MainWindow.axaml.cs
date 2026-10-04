@@ -117,6 +117,7 @@ public partial class MainWindow : Window
         };
         SwatchHex.LostFocus += (_, _) => CommitHex();
 
+        BuildPaletteControls();
         BuildModelControls();
         BuildMcpControls();
         BuildTabs();
@@ -585,6 +586,84 @@ public partial class MainWindow : Window
         Model.Color = c;
         Swatch.Background = new SolidColorBrush(c);
         ShowCurrentHex();
+        MarkPaletteSelection();
+    }
+
+    // ---- Palette ---------------------------------------------------------------------------
+
+    private const int MaxPalette = 48;
+
+    private static readonly string[] DefaultPalette =
+    {
+        "#000000", "#ffffff", "#7f7f7f", "#3b2a20", "#6b4226", "#c68642", "#e0ac69", "#f5d0b0",
+        "#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#1abc9c", "#3498db", "#8b5cf6", "#e84393",
+    };
+
+    private readonly List<Color> _palette = new();
+
+    private void BuildPaletteControls()
+    {
+        var saved = AppSettings.LoadPalette() ?? DefaultPalette.ToList();
+        foreach (var hex in saved)
+        {
+            try { var c = Rgba.Parse(hex); _palette.Add(Color.FromArgb(c.A, c.R, c.G, c.B)); }
+            catch (ArgumentException) { /* skip a damaged entry */ }
+        }
+
+        PaletteAddBtn.Click += (_, _) =>
+        {
+            var cur = ColorPick.Color;
+            if (_palette.Contains(cur)) return;   // already there: it is highlighted
+            if (_palette.Count >= MaxPalette) { ShowStatus(Loc.T("palette.full", MaxPalette)); return; }
+            _palette.Add(cur);
+            SavePalette();
+            RebuildPalette();
+        };
+        AppTheme.Changed += RebuildPalette;       // swatch outlines use theme colors
+        Loc.Changed += () => Dispatcher.UIThread.Post(RebuildPalette);   // the context menu text
+        RebuildPalette();
+    }
+
+    private void SavePalette() =>
+        AppSettings.SavePalette(_palette.Select(c => new Rgba(c.R, c.G, c.B, c.A).ToString()));
+
+    private void RebuildPalette()
+    {
+        PalettePanel.Children.Clear();
+        for (var i = 0; i < _palette.Count; i++)
+        {
+            var color = _palette[i];
+            var remove = new MenuItem { Header = Loc.T("palette.remove") };
+            remove.Click += (_, _) =>
+            {
+                _palette.Remove(color);
+                SavePalette();
+                RebuildPalette();
+            };
+            var tile = new Border
+            {
+                Width = 26, Height = 26, CornerRadius = new CornerRadius(5), BorderThickness = new Thickness(2),
+                Background = new SolidColorBrush(color), Cursor = new Cursor(StandardCursorType.Hand),
+                Tag = color, ContextMenu = new ContextMenu { Items = { remove } },
+            };
+            var hex = new Rgba(color.R, color.G, color.B, color.A).ToString();
+            ToolTip.SetTip(tile, i < 9 ? $"{hex}  ({i + 1})" : hex);
+            tile.PointerPressed += (_, e) =>
+            {
+                if (e.GetCurrentPoint(tile).Properties.IsLeftButtonPressed) ColorPick.Color = color;
+            };
+            PalettePanel.Children.Add(tile);
+        }
+        MarkPaletteSelection();
+    }
+
+    /// <summary>Outlines the swatch that matches the current color.</summary>
+    private void MarkPaletteSelection()
+    {
+        var cur = ColorPick.Color;
+        foreach (var child in PalettePanel.Children)
+            if (child is Border b && b.Tag is Color c)
+                b.BorderBrush = c == cur ? AppTheme.Brush("Fg") : AppTheme.Brush("Sep");
     }
 
     private void ShowCurrentHex()
@@ -640,6 +719,15 @@ public partial class MainWindow : Window
                 case Key.T: _ws.New(); e.Handled = true; break;
                 case Key.W: _ = CloseTabAsync(_ws.Active); e.Handled = true; break;
             }
+            return;
+        }
+        // 1-9 pick the first nine palette colors.
+        var digit = e.Key is >= Key.D1 and <= Key.D9 ? e.Key - Key.D1
+                  : e.Key is >= Key.NumPad1 and <= Key.NumPad9 ? e.Key - Key.NumPad1 : -1;
+        if (digit >= 0)
+        {
+            if (digit < _palette.Count) ColorPick.Color = _palette[digit];
+            e.Handled = true;
             return;
         }
         var tool = e.Key switch { Key.P => ToolPencil, Key.E => ToolEraser, Key.F => ToolFill, Key.I => ToolPicker, Key.B => ToolShade, _ => null };

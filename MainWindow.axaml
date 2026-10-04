@@ -396,8 +396,13 @@
                     </StackPanel>
 
                     <Border Classes="panelHead">
-                        <TextBlock v:Tr.Key="panel.color" Classes="h" />
+                        <DockPanel>
+                            <Button x:Name="PaletteAddBtn" DockPanel.Dock="Right" Classes="soft" Content="+" Padding="9,0" FontSize="14"
+                                    v:Tr.Tip="palette.add" />
+                            <TextBlock v:Tr.Key="panel.color" Classes="h" VerticalAlignment="Center" />
+                        </DockPanel>
                     </Border>
+                    <WrapPanel x:Name="PalettePanel" ItemSpacing="6" LineSpacing="6" Margin="12,12,12,0" />
                     <Border Padding="12">
                         <ColorView x:Name="ColorPick" Color="#8b5cf6" IsAlphaVisible="True" IsColorSpectrumVisible="True"
                                    IsColorPaletteVisible="False" IsColorComponentsVisible="False" IsAccentColorsVisible="False" />

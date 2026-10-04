@@ -52,6 +52,7 @@
 **Interface**
 - Dark UI in the style of graphic editors: tools on the left, panels on the right, tabs on top.
 - 12 languages: English (default), Russian, Spanish, Portuguese, German, French, Italian, Japanese, Simplified Chinese, Ukrainian, Kazakh, Polish. Switch language at any time from the top bar.
+- **Color palette**: save as many as 48 colors under the color picker. Click a swatch to switch to it (or press `1`–`9` for the first nine), **+** adds the current color, right-click removes one. The palette is remembered between launches.
 - 3 color themes: **Classic Purple** (default), **Dark Pinky** (black with pink accents) and **Sun White** (light, warm amber). Switch from the top bar; the choice is remembered.
 
 **MCP server** (off by default) — 21 tools for AI agents. See [MCP server](#mcp-server).
@@ -277,6 +278,7 @@ Invalid input returns a readable error (for example `No tab '99'` or `Invalid co
 | Action | Keys / mouse |
 |---|---|
 | Pencil / Eraser / Fill / Picker / Lighten-Darken | `P` / `E` / `F` / `I` / `B` |
+| Switch to palette color 1–9 | `1` … `9` |
 | Undo / Redo | `Ctrl+Z` / `Ctrl+Y` |
 | Open / Save PNG | `Ctrl+O` / `Ctrl+S` |
 | New tab / Close tab | `Ctrl+T` / `Ctrl+W` |
