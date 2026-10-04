@@ -73,8 +73,8 @@ public partial class MainWindow : Window
         InitializeComponent();
         SetColor(ColorPick.Color);
         ColorPick.ColorChanged += (_, e) => SetColor(e.NewColor);
-        Canvas.ColorPicked += c => ColorPick.Color = c;
-        Model.ColorPicked += c => ColorPick.Color = c;
+        Canvas.ColorPicked += OnColorPicked;
+        Model.ColorPicked += OnColorPicked;
         Canvas.HoverChanged += (x, y) => CursorText.Text = $"{x}, {y}  {_doc.GetPixel(x, y)}";
         Model.TexelHovered += h =>
         {
@@ -610,18 +610,26 @@ public partial class MainWindow : Window
             catch (ArgumentException) { /* skip a damaged entry */ }
         }
 
-        PaletteAddBtn.Click += (_, _) =>
-        {
-            var cur = ColorPick.Color;
-            if (_palette.Contains(cur)) return;   // already there: it is highlighted
-            if (_palette.Count >= MaxPalette) { ShowStatus(Loc.T("palette.full", MaxPalette)); return; }
-            _palette.Add(cur);
-            SavePalette();
-            RebuildPalette();
-        };
+        PaletteAddBtn.Click += (_, _) => AddToPalette(ColorPick.Color);
         AppTheme.Changed += RebuildPalette;       // swatch outlines use theme colors
         Loc.Changed += () => Dispatcher.UIThread.Post(RebuildPalette);   // the context menu text
         RebuildPalette();
+    }
+
+    private void AddToPalette(Color c)
+    {
+        if (_palette.Contains(c)) return;   // already there: it is highlighted
+        if (_palette.Count >= MaxPalette) { ShowStatus(Loc.T("palette.full", MaxPalette)); return; }
+        _palette.Add(c);
+        SavePalette();
+        RebuildPalette();
+    }
+
+    /// <summary>The eyedropper (tool or middle button) selects the color and keeps it in the palette.</summary>
+    private void OnColorPicked(Color c)
+    {
+        ColorPick.Color = c;
+        if (c.A > 0) AddToPalette(c);   // a transparent pixel would only add an invisible swatch
     }
 
     private void SavePalette() =>
