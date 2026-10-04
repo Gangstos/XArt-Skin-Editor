@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="XArt Skin Editor: 3D preview, layers panel and tools" width="900">
+  <img src="docs/screenshot.jpg" alt="XArt Skin Editor: 3D preview, layers panel and tools" width="900">
 </p>
 
 ---

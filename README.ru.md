@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshot.png" alt="XArt Skin Editor: 3D-превью, панель слоёв и инструменты" width="900">
+  <img src="docs/screenshot.jpg" alt="XArt Skin Editor: 3D-превью, панель слоёв и инструменты" width="900">
 </p>
 
 ---
