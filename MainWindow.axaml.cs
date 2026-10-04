@@ -87,6 +87,10 @@ public partial class MainWindow : Window
         ToolEraser.IsCheckedChanged += (_, _) => SetTool(ToolEraser, Tool.Eraser, "tool.eraser");
         ToolFill.IsCheckedChanged += (_, _) => SetTool(ToolFill, Tool.Fill, "tool.fill");
         ToolPicker.IsCheckedChanged += (_, _) => SetTool(ToolPicker, Tool.Picker, "tool.picker");
+        ToolShade.IsCheckedChanged += (_, _) => SetTool(ToolShade, Tool.Shade, "tool.shade");
+        ShadeLight.IsCheckedChanged += (_, _) => Shading.Darken = ShadeDark.IsChecked == true;
+        ShadeDark.IsCheckedChanged += (_, _) => Shading.Darken = ShadeDark.IsChecked == true;
+        ShadeAmount.ValueChanged += (_, _) => Shading.Percent = (int)Math.Clamp(ShadeAmount.Value ?? 15, 1, 50);
 
         GridCheck.IsCheckedChanged += (_, _) => SetGrid(GridCheck.IsChecked == true);
         MiGrid.PropertyChanged += (_, e) => { if (e.Property == MenuItem.IsCheckedProperty) SetGrid(MiGrid.IsChecked); };
@@ -619,6 +623,7 @@ public partial class MainWindow : Window
         Model.Tool = tool;
         _toolKey = key;
         ToolName.Text = Loc.T(key);
+        ShadePanel.IsVisible = tool == Tool.Shade;
     }
 
     private void OnKeyDown(object? sender, KeyEventArgs e)
@@ -637,7 +642,7 @@ public partial class MainWindow : Window
             }
             return;
         }
-        var tool = e.Key switch { Key.P => ToolPencil, Key.E => ToolEraser, Key.F => ToolFill, Key.I => ToolPicker, _ => null };
+        var tool = e.Key switch { Key.P => ToolPencil, Key.E => ToolEraser, Key.F => ToolFill, Key.I => ToolPicker, Key.B => ToolShade, _ => null };
         if (tool is null) return;
         tool.IsChecked = true;
         e.Handled = true;

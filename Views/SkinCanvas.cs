@@ -11,7 +11,7 @@ using XArtSkinEditor.Core;
 
 namespace XArtSkinEditor.Views;
 
-public enum Tool { Pencil, Eraser, Fill, Picker }
+public enum Tool { Pencil, Eraser, Fill, Picker, Shade }
 
 public sealed class SkinCanvas : Control
 {
@@ -149,11 +149,17 @@ public sealed class SkinCanvas : Control
         }
         _doc.BeginStroke();
         _active = tool;
+        // Shading works from the pixels as they were when the stroke began, one change per pixel,
+        // so dragging over the same pixel twice does not shade it twice.
+        _strokeSnap = tool == Tool.Shade ? _doc.SnapshotRgba() : null;
+        _shaded.Clear();
         Paint(px, null);
         _last = px;
     }
 
     private Tool _active;
+    private byte[]? _strokeSnap;
+    private readonly System.Collections.Generic.HashSet<(int, int)> _shaded = new();
 
     protected override void OnPointerMoved(PointerEventArgs e)
     {
@@ -183,6 +189,20 @@ public sealed class SkinCanvas : Control
 
     private void Paint((int x, int y) to, (int x, int y)? from)
     {
+        if (_active == Tool.Shade && _strokeSnap is { } snap)
+        {
+            var pts = from is { } a ? Shading.LinePoints(a.x, a.y, to.x, to.y) : new[] { to };
+            _doc!.Edit(ed =>
+            {
+                foreach (var (x, y) in pts)
+                {
+                    if (!_shaded.Add((x, y))) continue;
+                    var o = (y * SkinDocument.Width + x) * 4;
+                    ed.Set(x, y, Shading.Apply(new Rgba(snap[o], snap[o + 1], snap[o + 2], snap[o + 3])));
+                }
+            });
+            return;
+        }
         var c = _active == Tool.Eraser ? Rgba.Transparent : ToRgba(Color);
         _doc!.Edit(ed =>
         {

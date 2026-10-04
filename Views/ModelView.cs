@@ -207,6 +207,7 @@ public sealed class ModelView : Control
         // Pick against the pixels as they were when the stroke began: otherwise an eraser that just cleared an
         // overlay texel would see it as transparent on the next sample and go on to erase the base beneath it.
         _strokeRgba = (byte[])_rgba!.Clone();
+        _shaded.Clear();
         // In "visible layer" mode the stroke stays on the layer it started on, so drifting over a transparent
         // overlay texel does not suddenly paint or erase the base.
         _strokeBoxes = _layer == PaintLayer.Auto
@@ -252,8 +253,24 @@ public sealed class ModelView : Control
         RequestFrame();
     }
 
+    private readonly HashSet<(int, int)> _shaded = new();
+
     private void Stroke(List<(int x, int y)> texels)
     {
+        if (Tool == Tool.Shade && _strokeRgba is { } snap)
+        {
+            // One change per texel, computed from the pixels at the start of the stroke.
+            _doc!.Edit(ed =>
+            {
+                foreach (var (x, y) in texels)
+                {
+                    if (!_shaded.Add((x, y))) continue;
+                    var o = (y * SkinDocument.Width + x) * 4;
+                    ed.Set(x, y, Shading.Apply(new Rgba(snap[o], snap[o + 1], snap[o + 2], snap[o + 3])));
+                }
+            });
+            return;
+        }
         var c = Tool == Tool.Eraser ? Rgba.Transparent : new Rgba(Color.R, Color.G, Color.B, Color.A);
         _doc!.Edit(ed => { foreach (var (x, y) in texels) ed.Set(x, y, c); });
     }

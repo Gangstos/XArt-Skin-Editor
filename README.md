@@ -30,6 +30,7 @@
 **Painting**
 - 64×64 skin canvas (Minecraft 1.8+ format) with transparency.
 - Pencil, eraser, fill and color picker. Right mouse button erases on the skin map.
+- **Lighten / Darken** brush: makes pixels lighter or darker while keeping their hue and transparency. Choose the mode and strength (1–50%) in the options bar. One stroke changes each pixel once.
 - Color picker with alpha and manual hex input: `#RRGGBB`, `#RGB` or `#RRGGBBAA`.
 - Undo and redo (100 steps per tab).
 
@@ -275,7 +276,7 @@ Invalid input returns a readable error (for example `No tab '99'` or `Invalid co
 
 | Action | Keys / mouse |
 |---|---|
-| Pencil / Eraser / Fill / Picker | `P` / `E` / `F` / `I` |
+| Pencil / Eraser / Fill / Picker / Lighten-Darken | `P` / `E` / `F` / `I` / `B` |
 | Undo / Redo | `Ctrl+Z` / `Ctrl+Y` |
 | Open / Save PNG | `Ctrl+O` / `Ctrl+S` |
 | New tab / Close tab | `Ctrl+T` / `Ctrl+W` |

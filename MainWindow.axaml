@@ -292,6 +292,13 @@
                     <Border x:Name="Swatch" Width="24" Height="24" CornerRadius="5" BorderBrush="{DynamicResource T.SwatchLine}" BorderThickness="1" VerticalAlignment="Center" />
                     <TextBox x:Name="SwatchHex" Text="#8B5CF6" Width="108" MaxLength="9" VerticalAlignment="Center"
                              v:Tr.Tip="opt.hex.tip" />
+                    <StackPanel x:Name="ShadePanel" Orientation="Horizontal" Spacing="8" IsVisible="False" VerticalAlignment="Center">
+                        <Border Classes="vsep" />
+                        <RadioButton x:Name="ShadeLight" Classes="seg" GroupName="shade" v:Tr.Key="shade.light" IsChecked="True" />
+                        <RadioButton x:Name="ShadeDark" Classes="seg" GroupName="shade" v:Tr.Key="shade.dark" />
+                        <TextBlock v:Tr.Key="shade.amount" Classes="muted" VerticalAlignment="Center" />
+                        <NumericUpDown x:Name="ShadeAmount" Minimum="1" Maximum="50" Increment="1" FormatString="0&#37;" Value="15" Width="110" />
+                    </StackPanel>
                     <Border Classes="vsep" />
                     <TextBlock v:Tr.Key="opt.paint_on" Classes="muted" VerticalAlignment="Center" />
                     <ComboBox x:Name="LayerCombo" SelectedIndex="0">
@@ -332,6 +339,9 @@
                     </RadioButton>
                     <RadioButton x:Name="ToolPicker" Classes="icon" GroupName="tool" v:Tr.Tip="tip.picker">
                         <Path Classes="ic" Data="M5,19 L5.8,15.2 L14.5,6.5 L17.5,9.5 L8.8,18.2 Z M14.5,6.5 L16.8,4.2 A2.1,2.1 0 0 1 19.8,7.2 L17.5,9.5" />
+                    </RadioButton>
+                    <RadioButton x:Name="ToolShade" Classes="icon" GroupName="tool" v:Tr.Tip="tip.shade">
+                        <Path Classes="ic" Data="M12,3 A9,9 0 1 0 12,21 A9,9 0 1 0 12,3 Z M12,3 V21 M12,7 A5,5 0 0 1 12,17" />
                     </RadioButton>
 
                     <Border Classes="hsep" />
