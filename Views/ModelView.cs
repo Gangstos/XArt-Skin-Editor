@@ -27,7 +27,7 @@ public sealed class ModelView : Control
     private byte[]? _rgba, _strokeRgba;
     private ModelBox[]? _strokeBoxes;
     private ModelBox[]? _viewBoxes, _paintBoxes;
-    private bool _frameQueued, _orbit, _painting, _lowRes;
+    private bool _frameQueued, _orbit, _painting;
     private Point _last;
     private (int x, int y)? _hover;
     private PaintLayer _layer = PaintLayer.Auto;
@@ -117,7 +117,8 @@ public sealed class ModelView : Control
     {
         _frameQueued = false;
         if (_doc is null || Bounds.Width < 2 || Bounds.Height < 2) return;
-        var k = _lowRes ? 0.5 : 1.0;
+        // Render at physical pixels (125% / 150% display scaling) so the preview stays sharp, also while rotating.
+        var k = (TopLevel.GetTopLevel(this)?.RenderScaling) ?? 1.0;
         var w = Math.Max(1, (int)(Bounds.Width * k));
         var h = Math.Max(1, (int)(Bounds.Height * k));
         if (_bmp is null || _bmp.PixelSize.Width != w || _bmp.PixelSize.Height != h)
@@ -183,7 +184,7 @@ public sealed class ModelView : Control
 
         if (props.IsRightButtonPressed || props.IsMiddleButtonPressed)
         {
-            _orbit = true; _lowRes = true; _last = pos;
+            _orbit = true; _last = pos;
             e.Pointer.Capture(this);
             return;
         }
@@ -260,7 +261,7 @@ public sealed class ModelView : Control
     protected override void OnPointerReleased(PointerReleasedEventArgs e)
     {
         base.OnPointerReleased(e);
-        if (_orbit) { _orbit = false; _lowRes = false; RequestFrame(); }
+        if (_orbit) _orbit = false;
         if (_painting) { _painting = false; _strokeRgba = null; _strokeBoxes = null; _doc?.EndStroke(); }
         e.Pointer.Capture(null);
     }
