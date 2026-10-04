@@ -182,8 +182,9 @@ public sealed class ModelView : Control
         var pos = e.GetPosition(this);
         var props = e.GetCurrentPoint(this).Properties;
 
-        // The lighten/darken brush uses the right button to darken, so there the view is rotated with the middle button.
-        var shadeRight = Tool == Tool.Shade && props.IsRightButtonPressed;
+        // The lighten/darken brush darkens with the right button when it is pressed on the model,
+        // ...but a right click on empty space (nothing to darken there) still rotates the view.
+        var shadeRight = Tool == Tool.Shade && props.IsRightButtonPressed && _doc is not null && Pick(pos) is not null;
         if (props.IsMiddleButtonPressed || (props.IsRightButtonPressed && !shadeRight))
         {
             _orbit = true; _last = pos;

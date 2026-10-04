@@ -81,7 +81,7 @@ public static class Loc
             new[] { "tool.fill", "Fill", "Заливка", "Relleno", "Preencher", "Füllen", "Remplissage", "Riempimento", "塗りつぶし", "Заливка", "Толтыру", "Wypełnienie" },
             new[] { "tool.shade", "Lighten / Darken", "Осветлить / затемнить", "Aclarar / oscurecer", "Clarear / escurecer", "Aufhellen / Abdunkeln", "Éclaircir / assombrir", "Schiarisci / scurisci", "明るく / 暗く", "Освітлити / затемнити", "Жарықтандыру / күңгірттеу", "Rozjaśnij / przyciemnij" },
             new[] { "tip.shade", "Lighten / Darken (B)", "Осветлить / затемнить (B)", "Aclarar / oscurecer (B)", "Clarear / escurecer (B)", "Aufhellen / Abdunkeln (B)", "Éclaircir / assombrir (B)", "Schiarisci / scurisci (B)", "明るく / 暗く (B)", "Освітлити / затемнити (B)", "Жарықтандыру / күңгірттеу (B)", "Rozjaśnij / przyciemnij (B)" },
-            new[] { "shade.hint", "Left button lightens, right button darkens. Rotate with the middle button.", "ЛКМ осветляет, ПКМ затемняет. Вращение: средняя кнопка.", "Clic izquierdo aclara, derecho oscurece. Gira con el botón central.", "Botão esquerdo clareia, direito escurece. Gire com o botão do meio.", "Linke Taste hellt auf, rechte dunkelt ab. Drehen mit der mittleren Taste.", "Clic gauche éclaircit, clic droit assombrit. Rotation : bouton central.", "Tasto sinistro schiarisce, destro scurisce. Ruota con il tasto centrale.", "左ボタンで明るく、右ボタンで暗く。回転は中ボタン。", "ЛКМ освітлює, ПКМ затемнює. Обертання: середня кнопка.", "Сол жақ батырма жарықтандырады, оң жақ күңгірттейді. Айналдыру: ортаңғы батырма.", "LPM rozjaśnia, PPM przyciemnia. Obracanie: środkowy przycisk." },
+            new[] { "shade.hint", "Left button lightens, right button darkens (right-drag on empty space rotates).", "ЛКМ осветляет, ПКМ затемняет (ПКМ по пустому месту вращает).", "Clic izquierdo aclara, derecho oscurece (derecho en vacío gira).", "Botão esquerdo clareia, direito escurece (direito no vazio gira).", "Linke Taste hellt auf, rechte dunkelt ab (rechts im Leeren dreht).", "Clic gauche éclaircit, droit assombrit (droit dans le vide : rotation).", "Tasto sinistro schiarisce, destro scurisce (destro nel vuoto ruota).", "左で明るく、右で暗く（何もない所の右ドラッグで回転）。", "ЛКМ освітлює, ПКМ затемнює (ПКМ по порожньому місцю обертає).", "Сол жақ жарықтандырады, оң жақ күңгірттейді (бос жерде оң жақ — айналдыру).", "LPM rozjaśnia, PPM przyciemnia (PPM na pustym miejscu obraca)." },
             new[] { "shade.amount", "Strength", "Сила", "Intensidad", "Intensidade", "Stärke", "Intensité", "Intensità", "強さ", "Сила", "Күші", "Siła" },
             new[] { "tool.picker","Picker", "Пипетка", "Cuentagotas", "Conta-gotas", "Pipette", "Pipette", "Contagocce", "スポイト", "Піпетка", "Пипетка", "Pipeta" },
 
@@ -192,7 +192,7 @@ public static class Loc
         ["mi.undo"] = "撤销", ["mi.redo"] = "重做", ["mi.clear"] = "清空画布",
         ["mi.map"] = "皮肤贴图", ["mi.grid"] = "像素网格", ["mi.reset"] = "重置 3D 视图",
         ["tool.pencil"] = "铅笔", ["tool.eraser"] = "橡皮擦", ["tool.fill"] = "填充", ["tool.picker"] = "取色器",
-        ["tool.shade"] = "变亮 / 变暗", ["tip.shade"] = "变亮 / 变暗 (B)", ["shade.hint"] = "左键变亮，右键变暗。用中键旋转视图。", ["shade.amount"] = "强度",
+        ["tool.shade"] = "变亮 / 变暗", ["tip.shade"] = "变亮 / 变暗 (B)", ["shade.hint"] = "左键变亮，右键变暗（在空白处按右键拖动可旋转）。", ["shade.amount"] = "强度",
         ["opt.hex.tip"] = "输入颜色（#RRGGBB、#RGB 或 #RRGGBBAA）后按回车",
         ["opt.paint_on"] = "绘制到", ["layer.visible"] = "可见图层", ["layer.base"] = "仅基础层", ["layer.overlay"] = "仅外层",
         ["opt.model"] = "模型", ["opt.grid"] = "网格",
